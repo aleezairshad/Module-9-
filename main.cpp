@@ -7,10 +7,12 @@
 #include <ctime>
 #include "input.h"
 #include "GuessNumber.h"
+#include "nQueens.h"
 
 using namespace std;
 
-// Function Prototypes
+//function prototypes
+void runNQueens();
 char menuOption();
 void pattern(int n, int spaces);
 
@@ -21,15 +23,15 @@ int main()
     char option;
     while (running)
     {
-		system("cls");
+        system("cls");
         option = menuOption();
         switch (option)
         {
         case '1':
         {
-			system("cls");
-			const int THREE = 3, ZERO = 0;
-            cout << "\n\t1> Pattern of astricks and blanks\n\n";
+            system("cls");
+            const int THREE = 3, ZERO = 0;
+            cout << "\n\t1> Pattern of asterisks and blanks\n\n";
 
             pattern(THREE, ZERO);
 
@@ -39,7 +41,7 @@ int main()
         }
         case '2':
         {
-			system("cls");
+            system("cls");
             int maximum = rand() % 1000 + 1;
 
             GuessNumber game(maximum);
@@ -50,9 +52,13 @@ int main()
         }
         case '3':
             //towerOfHanoi();
-			break;
+            break;
         case '4':
-            //nQueens();
+        {
+            system("cls");
+
+            runNQueens();
+        }
             break;
         case '0':
             running = false;
@@ -61,19 +67,19 @@ int main()
             cout << "\n\t\t  Invalid option. Please try again.\n";
             break;
         }
-	}
-	
-	return 0;
+    }
+
+    return 0;
 }
 
 char menuOption()
 {
     cout << "\t\t  CMPR131 Chapter 9: Recursive Applications by Hany, Aleeza, Thanh, Victor, and Jacob (10/30/2026)\n";
     cout << "\t\t" << string(100, char(205));
-    cout << "\n\t\t  1> Pattern of astricks and blanks";
+    cout << "\n\t\t  1> Pattern of asterisks and blanks";
     cout << "\n\t\t  2> Guess a number";
     cout << "\n\t\t  3> Solve Tower of Hanoi";
-	cout << "\n\t\t  4> Solve n-Queens\n";
+    cout << "\n\t\t  4> Solve n-Queens\n";
     cout << "\t\t" << string(100, char(196));
     cout << "\n\t\t  0 > Exit\n";
     cout << "\t\t" << string(100, char(205));
@@ -86,7 +92,7 @@ char menuOption()
 // Postcondition: Displays the recursive pattern of asterisks and blanks.
 void pattern(int n, int spaces)
 {
-	const int ONE = 1;
+    const int ONE = 1;
     // Base case
     if (n == 0)
     {
@@ -111,3 +117,35 @@ void pattern(int n, int spaces)
     pattern(n - ONE, spaces + (1 << n));
 }
 
+void runNQueens()
+{
+    const int ONE = 1, ZERO = 0, TWO = 2;
+
+    int size = inputInteger("\n\n\tEnter the board dimension nxn: ", 1, 100); // Input the board size from the user
+    // Check for invalid board sizes (2 and 3) and prompt the user to enter a valid size
+    while (size == 2 || size == 3)
+    {
+        cout << "\n\tERROR: size cannot be " << size << ", because there is no solution.";
+        size = inputInteger("\n\tEnter the board dimension nxn: ", 1, 100); // Prompt the user to enter a valid board size
+    }
+    nQueens board(size); // Create an instance of the nQueens class with the specified board size
+
+    //let the user choose the column to place the queen on the 1st row
+    cout << "\n\tEnter the column position(1.." << size << ") of the first Queen on row 1: ";
+    int firstColumn = inputInteger("", ONE, size);
+    board.placeQueen(ONE, firstColumn);
+    //Recursive takes place here
+    bool foundSolution = board.solve(TWO);
+
+    if (foundSolution)
+    {
+        board.display();
+    }
+    else
+    {
+        cout << "\n\tNo solution!";
+    }
+
+    cout << "\n";
+    system("pause");
+}
