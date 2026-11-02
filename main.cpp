@@ -8,6 +8,7 @@
 #include "input.h"
 #include "GuessNumber.h"
 #include "nQueens.h"
+#include "TowerOfHanoi.h"
 
 
 using namespace std;
@@ -16,6 +17,7 @@ using namespace std;
 char menuOption();
 void pattern(int n, int spaces);
 void runNQueens();
+void runTowerOfHanoi();
 
 
 int main()
@@ -25,14 +27,14 @@ int main()
     char option;
     while (running)
     {
-		system("cls");
+        system("cls");
         option = menuOption();
         switch (option)
         {
         case '1':
         {
-			system("cls");
-			const int THREE = 3, ZERO = 0;
+            system("cls");
+            const int THREE = 3, ZERO = 0;
             cout << "\n\t1> Pattern of astricks and blanks\n\n";
 
             pattern(THREE, ZERO);
@@ -43,7 +45,7 @@ int main()
         }
         case '2':
         {
-			system("cls");
+            system("cls");
             int maximum = rand() % 1000 + 1;
 
             GuessNumber game(maximum);
@@ -53,8 +55,11 @@ int main()
             break;
         }
         case '3':
-            //towerOfHanoi();
-			break;
+        {
+            system("cls");
+            runTowerOfHanoi();
+            break;
+        }
         case '4':
         {
             system("cls");
@@ -74,9 +79,9 @@ int main()
             cout << "\n\t\t  Invalid option. Please try again.\n";
             break;
         }
-	}
-	
-	return 0;
+    }
+
+    return 0;
 }
 
 char menuOption()
@@ -86,7 +91,7 @@ char menuOption()
     cout << "\n\t\t  1> Pattern of astricks and blanks";
     cout << "\n\t\t  2> Guess a number";
     cout << "\n\t\t  3> Solve Tower of Hanoi";
-	cout << "\n\t\t  4> Solve n-Queens\n";
+    cout << "\n\t\t  4> Solve n-Queens\n";
     cout << "\t\t" << string(100, char(196));
     cout << "\n\t\t  0 > Exit\n";
     cout << "\t\t" << string(100, char(205));
@@ -99,7 +104,7 @@ char menuOption()
 // Postcondition: Displays the recursive pattern of asterisks and blanks.
 void pattern(int n, int spaces)
 {
-	const int ONE = 1;
+    const int ONE = 1;
     // Base case
     if (n == 0)
     {
@@ -122,6 +127,30 @@ void pattern(int n, int spaces)
 
     // Second recursive call
     pattern(n - ONE, spaces + (1 << n));
+}
+
+// Precondition: None.
+// Postcondition: Runs Tower of Hanoi until the user chooses not to play again.
+void runTowerOfHanoi()
+{
+    const int ONE = 1, MAX_RINGS = 64, TITLE_LINE = 97;
+    char again = 'Y';
+
+    while (again == 'Y')
+    {
+        system("cls");
+        cout << "Tower of Hanoi (Recursive)\n";
+        cout << string(TITLE_LINE, char(196)) << "\n";
+
+        int rings = inputInteger("\n        Enter the number of rings (1..64): ", ONE, MAX_RINGS);
+        TowerOfHanoi game(rings);
+
+        game.display();
+        game.solve();
+
+        cout << "\n        The computer has solved the game in " << game.getMoves() << " moves.\n";
+        again = inputChar("\n        Play again? (Y-yes or N-no) ", 'Y', 'N');
+    }
 }
 
 // --Hany modified the runNQueens function to use the updated nQueens class with tracking arrays for efficient conflict checking.
@@ -157,4 +186,3 @@ void runNQueens()
     }
 
 }
-
