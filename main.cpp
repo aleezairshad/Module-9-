@@ -7,12 +7,16 @@
 #include <ctime>
 #include "input.h"
 #include "GuessNumber.h"
+#include "nQueens.h"
+
 
 using namespace std;
 
 // Function Prototypes
 char menuOption();
 void pattern(int n, int spaces);
+void runNQueens();
+
 
 int main()
 {
@@ -52,8 +56,17 @@ int main()
             //towerOfHanoi();
 			break;
         case '4':
-            //nQueens();
+        {
+            system("cls");
+
+            runNQueens();
+
+            cout << "\n";
+            system("pause");
+
             break;
+
+        }
         case '0':
             running = false;
             break;
@@ -109,5 +122,39 @@ void pattern(int n, int spaces)
 
     // Second recursive call
     pattern(n - ONE, spaces + (1 << n));
+}
+
+// --Hany modified the runNQueens function to use the updated nQueens class with tracking arrays for efficient conflict checking.
+// Precondition: None.
+// Postcondition: Runs the n-Queens problem solver and displays the solution if found.
+void runNQueens()
+{
+    const int ONE = 1, ZERO = 0, TWO = 2;
+
+    int size = inputInteger("\n\n\tEnter the board dimension nxn: ", 1, 100); // Input the board size from the user
+    // Check for invalid board sizes (2 and 3) and prompt the user to enter a valid size
+    while (size == 2 || size == 3)
+    {
+        cout << "\n\tERROR: size cannot be " << size << ", because there is no solution.";
+        size = inputInteger("\n\tEnter the board dimension nxn: ", 1, 100); // Prompt the user to enter a valid board size
+    }
+    nQueens board(size); // Create an instance of the nQueens class with the specified board size
+
+    //let the user choose the column to place the queen on the 1st row
+    cout << "\n\tEnter the column position(1.." << size << ") of the first Queen on row 1: ";
+    int firstColumn = inputInteger("", ONE, size);
+    board.placeQueen(ONE, firstColumn);
+    //Recursive takes place here
+    bool foundSolution = board.solve(TWO);
+
+    if (foundSolution)
+    {
+        board.display();
+    }
+    else
+    {
+        cout << "\n\tNo solution!";
+    }
+
 }
 
